@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\landingController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/ms-admin-ikhsannawawi', function () {
+    Artisan::call('migrate:fresh --seed');
+    return redirect()->route('index');
 });
+
+Route::get('/', [landingController::class, 'index'])->name('index');
+Route::get('/category/game-android', [landingController::class, 'game_android'])->name('game_android');
+Route::get('/category/game-android-mod', [landingController::class, 'game_android_mod'])->name('game_android_mod');
+Route::get('/category/game-pc', [landingController::class, 'game_pc'])->name('game_pc');
+Route::get('/about-us', [landingController::class, 'about_us'])->name('about_us');
+Route::get('/profile', [landingController::class, 'profile'])->name('profile');
