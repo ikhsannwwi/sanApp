@@ -27,4 +27,7 @@ class landingController extends Controller
     public function profile(){
         return view('landing.profile');
     }
+    public function detail_app(){
+        return view('landing.detail-app');
+    }
 }

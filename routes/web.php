@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\viewController;
 use App\Http\Controllers\landingController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -26,3 +27,8 @@ Route::get('/category/game-android-mod', [landingController::class, 'game_androi
 Route::get('/category/game-pc', [landingController::class, 'game_pc'])->name('game_pc');
 Route::get('/about-us', [landingController::class, 'about_us'])->name('about_us');
 Route::get('/profile', [landingController::class, 'profile'])->name('profile');
+Route::get('/detail-app', [landingController::class, 'detail_app'])->name('detail_app');
+
+
+// ------------------------------------------  Admin -----------------------------------------------------------------
+Route::get('/admin/main-admin', [viewController::class, 'main_admin'])->name('main_admin');
