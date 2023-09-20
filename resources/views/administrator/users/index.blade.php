@@ -16,12 +16,12 @@
                         </nav>
                     </div>
                     <div class="col-6">
-                        @if (isallowed('user','add'))
-                        <a href="{{ route('admin.users.add') }}" class="btn btn-primary ms-3 float-end">Tambah
-                            Data</a>
+                        @if (isallowed('user', 'add'))
+                            <a href="{{ route('admin.users.add') }}" class="btn btn-primary me-3 float-end">Tambah
+                                Data</a>
                         @endif
-                        @if (isallowed('user','arsip'))
-                        <a href="{{ route('admin.users.arsip') }}" class="btn btn-primary mx-3 float-end">Arsip</a>
+                        @if (isallowed('user', 'arsip'))
+                            <a href="{{ route('admin.users.arsip') }}" class="btn btn-primary mx-3 float-end">Arsip</a>
                         @endif
                         <a href="javascript:void(0)" class="btn btn-primary float-end" id="filterButton">Filter</a>
                     </div>
@@ -32,12 +32,12 @@
                 <table class="table" id="datatable">
                     <thead>
                         <tr>
-                            <th>No</th>
+                            <th width="25">No</th>
                             <th width="">User Group</th>
                             <th width="">Nama</th>
                             <th width="">Email</th>
                             <th width="">Status</th>
-                            <th width="">Action</th>
+                            <th width="200">Action</th>
                         </tr>
                     </thead>
                 </table>
@@ -142,11 +142,13 @@
                                 //         '{{ route('admin.users.getData') }}')
                                 //     .load();
                                 data_table.ajax.reload(null, false);
-                                swalWithBootstrapButtons.fire(
-                                    'Berhasil!',
-                                    'Data berhasil dihapus.',
-                                    'success'
-                                );
+                                swalWithBootstrapButtons.fire({
+                                    title: 'Berhasil!',
+                                    text: 'Data berhasil dihapus.',
+                                    icon: 'success',
+                                    timer: 1500, // 2 detik
+                                    showConfirmButton: false
+                                });
 
                                 // Remove the deleted row from the DataTable without reloading the page
                                 // data_table.row($(this).parents('tr')).remove().draw();
@@ -201,11 +203,13 @@
                             }),
                             success: function() {
                                 data_table.ajax.reload(null, false);
-                                swalWithBootstrapButtons.fire(
-                                    'Berhasil!',
-                                    'Status berhasil diubah ke ' + changeto,
-                                    'success'
-                                );
+                                swalWithBootstrapButtons.fire({
+                                    title: 'Berhasil!',
+                                    text: 'Status berhasil diubah ke ' + changeto,
+                                    icon: 'success',
+                                    timer: 1500, // 2 detik
+                                    showConfirmButton: false
+                                });
                             }
                         });
 
@@ -228,10 +232,10 @@
 
 
             optionUserGroup.html(
-                '<option id="loadingSpinner" style="display: none;">'+
-                    '<i class="fas fa-spinner fa-spin">'+
-                        '</i> Sedang memuat...</option>'
-                );
+                '<option id="loadingSpinner" style="display: none;">' +
+                '<i class="fas fa-spinner fa-spin">' +
+                '</i> Sedang memuat...</option>'
+            );
 
             var loadingSpinner = $('#loadingSpinner');
 
@@ -263,7 +267,7 @@
                     console.error('Gagal memuat data User Group.');
                     optionUserGroup.html('<option>Gagal memuat data</option>')
                     loadingSpinner
-                .hide(); // Hide the loading spinner even if there's an error
+                        .hide(); // Hide the loading spinner even if there's an error
                 }
             });
 

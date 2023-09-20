@@ -139,8 +139,6 @@
     <!-- Basic Tables end -->
 @endsection
 
-
-
 @push('js')
     <script src="{{ asset('templateAdmin/assets/extensions/parsleyjs/parsley.min.js') }}"></script>
     <script src="{{ asset('templateAdmin/assets/js/pages/parsley.js') }}"></script>
@@ -187,6 +185,12 @@
             const validator = $(form).parsley();
 
             const submitButton = document.getElementById("formSubmit");
+
+            form.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                }
+            });
 
             submitButton.addEventListener("click", async function(e) {
                 e.preventDefault();
@@ -238,7 +242,7 @@
 
                     accessErrorKode.text(
                         'Kode harus 12 characters dan diawali dengan sanapp- lalu diakhiri oleh 5 uniqid.'
-                        );
+                    );
                     return;
                 } else {
                     accessErrorKode.removeClass('invalid-feedback');

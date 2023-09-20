@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\admin;
 
 use DataTables;
+use File;
 use App\Models\admin\User;
 use Illuminate\Http\Request;
 use App\Models\admin\Profile;
 use App\Http\Controllers\Controller;
+use Intervention\Image\Facades\Image;
 
 class ProfileController extends Controller
 {
@@ -22,13 +24,14 @@ class ProfileController extends Controller
         $data = Profile::with('user')
         ->where('user_kode',$kode)
         ->first();
-    
+        $sosmed = json_decode($data->sosial_media, true); // Mengubah JSON menjadi array
+        // dd($sosmed);
         // Jika data tidak ditemukan, tampilkan pesan kesalahan atau arahkan ke halaman lain
         if (!$data) {
             return redirect()->route('admin.dashboard')->with('error', 'Data pengguna tidak ditemukan.');
         }
     
-        return view('administrator.profile.index', compact('data'));
+        return view('administrator.profile.index', compact('data','sosmed'));
     }
     
 
@@ -44,7 +47,7 @@ class ProfileController extends Controller
         $kode = $request->kode;
 
         // Check permission
-        if (auth()->user()->kode != 'daysf-01' && $kode != auth()->user()->kode) {
+        if ($kode != auth()->user()->kode) {
             abort(403);
         }
 
@@ -80,6 +83,32 @@ class ProfileController extends Controller
         }
         if ($request->filled('alamat')) {
             $updates['alamat'] = $request->alamat;
+        }
+        if ($request->filled('sosmed_linkedin') || $request->filled('sosial_media') || $request->filled('sosial_media') || $request->filled('sosial_media')) {
+            $sosmedData = [
+                'linkedin' => $request->sosmed_linkedin,
+                'twitter' => $request->sosmed_twitter,
+                'instagram' => $request->sosmed_instagram,
+                'facebook' => $request->sosmed_facebook,
+            ];
+            $sosmedJson = json_encode($sosmedData);
+
+            $updates['sosial_media'] = $sosmedJson;
+        }
+        if ($request->hasFile('foto_user_profile')) {
+
+            if (!empty($data->foto)) {
+                $image_path = "./administrator/assets/media/profile/" . $data->foto;
+                if (File::exists($image_path)) {
+                    File::delete($image_path);
+                }
+            }
+
+            $image = $request->file('foto_user_profile');
+            $fileName = 'foto-profile_' . $data->user->name . '_' . date('Y-m-d-H-i-s') . '_' . uniqid(2) . '.' . $image->getClientOriginalExtension();
+            $path = upload_path('profile') . $fileName;
+            Image::make($image->getRealPath())->save($path, 100);
+            $updates['foto'] = $fileName;
         }
         
         if ($request->filled('email')) {
@@ -122,10 +151,10 @@ class ProfileController extends Controller
 
     public function checkEmail(Request $request){
         if($request->ajax()){
-            $users = Profile::where('email', $request->email);
+            $users = User::where('email', $request->email);
             
-            if(isset($request->id)){
-                $users->where('id', '!=', $request->id);
+            if(isset($request->kode)){
+                $users->where('kode', '!=', $request->kode);
             }
     
             if($users->exists()){

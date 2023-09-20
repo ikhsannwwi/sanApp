@@ -16,8 +16,20 @@
                         </nav>
                     </div>
                     <div class="col-6">
-                        @if (isallowed('log_system','clear'))
-                        <a href="{{ route('admin.logSystems.clearLogs') }}" class="btn btn-primary mx-3 float-end">Clear</a>
+                        @if (isallowed('log_system', 'clear'))
+                            <a href="javascript:void(0)" class="btn btn-danger mx-3 float-end clear">
+                                <span class="indicator-label-kode">Clear Logs</span>
+                                <span class="indicator-progress-kode" style="display: none;">
+                                    <div class="d-flex">
+                                        <span class="spinner-border spinner-border-sm align-middle ms-2 mt-1"></span>
+                                    </div>
+                                </span>
+                            </a>
+                        @endif
+                        @if (isallowed('log_system', 'export'))
+                            <a href="{{route('admin.logSystems.generatePDF')}}" target="_blank" class="btn btn-primary ms-3 float-end">
+                                Export
+                            </a>
                         @endif
                         <a href="javascript:void(0)" class="btn btn-primary float-end" id="filterButton">Filter</a>
                     </div>
@@ -75,7 +87,8 @@
                 },
                 columns: [{
                         render: function(data, type, row, meta) {
-                            return '<a href="javascript:void(0)" data-id="' + row.id + '" data-bs-toggle="modal" data-bs-target="#detailLogSystem">' +
+                            return '<a href="javascript:void(0)" data-id="' + row.id +
+                                '" data-bs-toggle="modal" data-bs-target="#detailLogSystem">' +
                                 (meta.row + meta.settings._iDisplayStart + 1) + '</a>';
                         },
                     },
@@ -123,6 +136,69 @@
             function getModule() {
                 return $("#inputModule").val();
             }
+
+            $(document).on('click', '.clear', function(event) {
+                const button = $(this);
+                const label = button.find('.indicator-label-kode');
+                const progress = button.find('.indicator-progress-kode');
+
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success mx-4',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                });
+
+                swalWithBootstrapButtons.fire({
+                    title: 'Apakah anda yakin ingin menghapus data ini',
+                    icon: 'warning',
+                    buttonsStyling: false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Saya yakin!',
+                    cancelButtonText: 'Tidak, Batalkan!',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Menampilkan spinner dan mengganti teks label
+                        progress.show();
+                        label.text('Clearing data...');
+
+                        $.ajax({
+                            type: "GET",
+                            url: "{{ route('admin.logSystems.clearLogs') }}",
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                "_method": "GET",
+                            },
+                            success: function() {
+                                // Menyembunyikan spinner dan mengembalikan label
+                                progress.hide();
+                                label.text('Clear Logs');
+
+                                data_table.ajax.reload(null, false);
+                                swalWithBootstrapButtons.fire(
+                                    'Berhasil!',
+                                    'Data log yang lebih lama dari 7 hari berhasil dihapus.',
+                                    'success'
+                                );
+                            },
+                            error: function() {
+                                // Menyembunyikan spinner dan mengembalikan label jika terjadi kesalahan
+                                progress.hide();
+                                label.text('Clear Logs');
+
+                                swalWithBootstrapButtons.fire(
+                                    'Gagal!',
+                                    'Terjadi kesalahan saat menghapus data.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            });
+
         });
     </script>
 @endpush

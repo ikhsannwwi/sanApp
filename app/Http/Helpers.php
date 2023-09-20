@@ -19,6 +19,55 @@ function asset_frontpage($url)
 	return asset('frontpage/' . $url);
 }
 
+function upload_path($type = '', $file = '')
+{
+	switch ($type) {
+		case 'settings':
+			$target_folder = 'settings';
+			break;
+		case 'profile':
+			$target_folder = 'profile';
+			break;
+		default:
+			$target_folder = '';
+			break;
+	}
+
+	return Str::finish('administrator/assets/media/' . $target_folder, '/') . $file;
+}
+
+function img_src($image = '', $img_type = '')
+{
+	$file_notfound = 'media/notfound.jpg';
+
+	if (filter_var($image, FILTER_VALIDATE_URL)) {
+		return $image;
+	} else {
+		switch ($img_type) {
+			case 'settings':
+				$folder = '/settings/';
+				break;
+			case 'profile':
+				$folder = '/profile/';
+				break;
+			default:
+				$folder = '/';
+				break;
+		}
+		$file = 'administrator/assets/media' . $folder . $image;
+		//echo $file;
+		if ($image === true) {
+			return url('media' . $folder);
+		} else if (file_exists($file) && !is_dir($file)) {
+			return url($file);
+		} elseif (file_exists($file_notfound)) {
+			return url($file_notfound);
+		} else {
+			return 'http://placehold.it/500x500?text=Not Found';
+		}
+	}
+}
+
 function createLog($module, $action, $data_id,$data)
 {
     $log['ip_address'] = request()->ip();

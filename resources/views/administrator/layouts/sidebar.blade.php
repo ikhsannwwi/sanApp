@@ -3,8 +3,10 @@
         <div class="sidebar-header position-relative">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="logo">
-                    <a href="index.html"><img src="{{ asset('templateAdmin/assets/images/logo/logo.svg') }}" alt="Logo"
-                            srcset=""></a>
+                    <a href="/">
+                        <img src="{{ array_key_exists('logo_app_admin', $settings) ? img_src($settings['logo_app_admin'], 'settings') : '' }}"
+                            width="125px" height="46px" alt="">
+                    </a>
                 </div>
                 <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -43,8 +45,8 @@
             <ul class="menu">
                 <li class="sidebar-title">Menu</li>
 
-                <li class="sidebar-item active ">
-                    <a href="{{route('admin.dashboard')}}" class='sidebar-link'>
+                <li class="sidebar-item {{ Route::is('admin.dashboard*') ? 'active' : '' }} ">
+                    <a href="{{ route('admin.dashboard') }}" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
                     </a>
@@ -61,262 +63,56 @@
                         </li>
                     </ul>
                 </li>
-                
-                <li class="sidebar-item  has-sub">
+
+                <li class="sidebar-item  has-sub {{ Route::is('admin.users*', 'admin.user_groups*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-grid-1x2-fill"></i>
                         <span>User Management</span>
                     </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="{{route('admin.user_groups')}}">User Groups</a>
+                    <ul class="submenu">
+                        <li class="submenu-item {{ Route::is('admin.user_groups*') ? 'active' : '' }} ">
+                            <a href="{{ route('admin.user_groups') }}">User Groups</a>
                         </li>
-                        <li class="submenu-item ">
-                            <a href="{{route('admin.users')}}">Users</a>
+                        <li class="submenu-item {{ Route::is('admin.users*') ? 'active' : '' }} ">
+                            <a href="{{ route('admin.users') }}">Users</a>
                         </li>
                     </ul>
                 </li>
 
-                <li class="sidebar-item  has-sub">
+                <li class="sidebar-item  has-sub {{ Route::is('admin.logSystems*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-collection-fill"></i>
                         <span>Systems</span>
                     </a>
                     <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="{{route('admin.logSystems')}}">Logs</a>
+                        <li class="submenu-item {{ Route::is('admin.logSystems*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.logSystems') }}">Logs</a>
                         </li>
                     </ul>
                 </li>
 
                 <li class="sidebar-title">Forms &amp; Tables</li>
 
-                <li class="sidebar-item  ">
-                    <a href="{{route('admin.profile',auth()->user()->kode)}}" class='sidebar-link'>
+                <li class="sidebar-item  {{ Route::is('admin.profile*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.profile', auth()->user()->kode) }}" class='sidebar-link'>
                         <i class="bi bi-file-earmark-medical-fill"></i>
                         <span>Profile</span>
                     </a>
                 </li>
-
-                <li class="sidebar-item  has-sub">
+                <li class="sidebar-item  has-sub {{ Route::is('admin.settings*','admin.module*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
-                        <i class="bi bi-journal-check"></i>
-                        <span>Form Validation</span>
+                        <i class="bi bi-collection-fill"></i>
+                        <span>Settings</span>
                     </a>
                     <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="form-validation-parsley.html">Parsley</a>
+                        <li class="submenu-item {{ Route::is('admin.settings*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.settings') }}">Setting General</a>
+                        </li>
+                        <li class="submenu-item {{ Route::is('admin.module*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.module') }}">Modul Management</a>
                         </li>
                     </ul>
                 </li>
-
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-pen-fill"></i>
-                        <span>Form Editor</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="form-editor-quill.html">Quill</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="form-editor-ckeditor.html">CKEditor</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="form-editor-summernote.html">Summernote</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="form-editor-tinymce.html">TinyMCE</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="sidebar-item  ">
-                    <a href="table.html" class='sidebar-link'>
-                        <i class="bi bi-grid-1x2-fill"></i>
-                        <span>Table</span>
-                    </a>
-                </li>
-
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-file-earmark-spreadsheet-fill"></i>
-                        <span>Datatables</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="table-datatable.html">Datatable</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="table-datatable-jquery.html">Datatable (jQuery)</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="sidebar-title">Extra UI</li>
-
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-pentagon-fill"></i>
-                        <span>Widgets</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="ui-widgets-chatbox.html">Chatbox</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="ui-widgets-pricing.html">Pricing</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="ui-widgets-todolist.html">To-do List</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-egg-fill"></i>
-                        <span>Icons</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="ui-icons-bootstrap-icons.html">Bootstrap Icons </a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="ui-icons-fontawesome.html">Fontawesome</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="ui-icons-dripicons.html">Dripicons</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-bar-chart-fill"></i>
-                        <span>Charts</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="ui-chart-chartjs.html">ChartJS</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="ui-chart-apexcharts.html">Apexcharts</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="sidebar-item  ">
-                    <a href="ui-file-uploader.html" class='sidebar-link'>
-                        <i class="bi bi-cloud-arrow-up-fill"></i>
-                        <span>File Uploader</span>
-                    </a>
-                </li>
-
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-map-fill"></i>
-                        <span>Maps</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="ui-map-google-map.html">Google Map</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="ui-map-jsvectormap.html">JS Vector Map</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="sidebar-title">Pages</li>
-
-                <li class="sidebar-item  ">
-                    <a href="application-email.html" class='sidebar-link'>
-                        <i class="bi bi-envelope-fill"></i>
-                        <span>Email Application</span>
-                    </a>
-                </li>
-
-                <li class="sidebar-item  ">
-                    <a href="application-chat.html" class='sidebar-link'>
-                        <i class="bi bi-chat-dots-fill"></i>
-                        <span>Chat Application</span>
-                    </a>
-                </li>
-
-                <li class="sidebar-item  ">
-                    <a href="application-gallery.html" class='sidebar-link'>
-                        <i class="bi bi-image-fill"></i>
-                        <span>Photo Gallery</span>
-                    </a>
-                </li>
-
-                <li class="sidebar-item  ">
-                    <a href="application-checkout.html" class='sidebar-link'>
-                        <i class="bi bi-basket-fill"></i>
-                        <span>Checkout Page</span>
-                    </a>
-                </li>
-
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-person-badge-fill"></i>
-                        <span>Authentication</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="auth-login.html">Login</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="auth-register.html">Register</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="auth-forgot-password.html">Forgot Password</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-x-octagon-fill"></i>
-                        <span>Errors</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="error-403.html">403</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="error-404.html">404</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="error-500.html">500</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="sidebar-title">Raise Support</li>
-
-                <li class="sidebar-item  ">
-                    <a href="https://zuramai.github.io/mazer/docs" class='sidebar-link'>
-                        <i class="bi bi-life-preserver"></i>
-                        <span>Documentation</span>
-                    </a>
-                </li>
-
-                <li class="sidebar-item  ">
-                    <a href="https://github.com/zuramai/mazer/blob/main/CONTRIBUTING.md" class='sidebar-link'>
-                        <i class="bi bi-puzzle"></i>
-                        <span>Contribute</span>
-                    </a>
-                </li>
-
-                <li class="sidebar-item  ">
-                    <a href="https://github.com/zuramai/mazer#donation" class='sidebar-link'>
-                        <i class="bi bi-cash"></i>
-                        <span>Donate</span>
-                    </a>
-                </li>
-
             </ul>
         </div>
     </div>

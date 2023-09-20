@@ -89,7 +89,8 @@
                     {
                         data: 'action',
                         name: 'action',
-                        searchable: false
+                        searchable: false,
+                        class: 'text-center'
                     }
                 ],
             });
@@ -128,11 +129,13 @@
                                 //         '{{ route('admin.user_groups.getData') }}')
                                 //     .load();
                                 data_table.ajax.reload(null, false);
-                                swalWithBootstrapButtons.fire(
-                                    'Berhasil!',
-                                    'Data berhasil dihapus.',
-                                    'success'
-                                );
+                                swalWithBootstrapButtons.fire({
+                                    title: 'Berhasil!',
+                                    text: 'Data berhasil dihapus.',
+                                    icon: 'success',
+                                    timer: 1500, // 2 detik
+                                    showConfirmButton: false
+                                });
 
                                 // Remove the deleted row from the DataTable without reloading the page
                                 // data_table.row($(this).parents('tr')).remove().draw();
@@ -187,11 +190,13 @@
                             }),
                             success: function() {
                                 data_table.ajax.reload(null, false);
-                                swalWithBootstrapButtons.fire(
-                                    'Berhasil!',
-                                    'Status berhasil diubah ke ' + changeto,
-                                    'success'
-                                );
+                                swalWithBootstrapButtons.fire({
+                                    title: 'Berhasil!',
+                                    text: 'Status berhasil diubah ke ' + changeto,
+                                    icon: 'success',
+                                    timer: 1500, // 2 detik
+                                    showConfirmButton: false
+                                });
                             }
                         });
 

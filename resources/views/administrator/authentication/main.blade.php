@@ -4,11 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daysf</title>
+    <title>{{ array_key_exists('nama_app_admin', $settings) ? $settings['nama_app_admin'] : '' }}</title>
     <link rel="stylesheet" href="{{asset('templateAdmin/assets/css/main/app.css')}}">
     <link rel="stylesheet" href="{{asset('templateAdmin/assets/css/pages/auth.css')}}">
-    <link rel="shortcut icon" href="{{asset('templateAdmin/assets/images/logo/favicon.svg')}}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{asset('templateAdmin/assets/images/logo/favicon.png')}}" type="image/png">
+    <link rel="shortcut icon" href="{{ array_key_exists('favicon', $settings) ? img_src($settings['favicon'], 'settings') : '' }}" type="image/png">
 
     <link rel="stylesheet" href="{{ asset('templateAdmin/assets/extensions/toastify-js/src/toastify.css') }}">
 

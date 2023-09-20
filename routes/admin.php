@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\AuthController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\viewController;
+use App\Http\Controllers\admin\ModuleController;
 use App\Http\Controllers\admin\ProfileController;
+use App\Http\Controllers\admin\SettingController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\LogSystemController;
 use App\Http\Controllers\admin\UserGroupController;
@@ -38,6 +40,7 @@ Route::prefix('admin')->group(function () {
         Route::get('log-systems/getDataUser', [LogSystemController::class, 'getDataUser'])->name('admin.logSystems.getDataUser');
         Route::get('log-systems/getDetail{id}', [LogSystemController::class, 'getDetail'])->name('admin.logSystems.getDetail');
         Route::get('log-systems/clearLogs', [LogSystemController::class, 'clearLogs'])->name('admin.logSystems.clearLogs');
+        Route::get('log-systems/generatePDF', [LogSystemController::class, 'generatePDF'])->name('admin.logSystems.generatePDF');
     
         //User Group
         Route::get('user-groups', [UserGroupController::class, 'index'])->name('admin.user_groups');
@@ -77,5 +80,19 @@ Route::prefix('admin')->group(function () {
         Route::put('profile/update', [ProfileController::class, 'update'])->name('admin.profile.update');
         Route::get('profile/getDetail-{kode}', [ProfileController::class, 'getDetail'])->name('admin.profile.getDetail');
         Route::post('profile/checkEmail',[ProfileController::class, 'checkEmail'])->name('admin.profile.checkEmail');
+        
+        //Setting
+        Route::get('settings', [SettingController::class, 'index'])->name('admin.settings');
+        Route::put('settings/update', [SettingController::class, 'update'])->name('admin.settings.update');
+
+        //Modul dan Modul Akses
+        Route::get('module', [ModuleController::class, 'index'])->name('admin.module');
+        Route::get('module/add', [ModuleController::class, 'add'])->name('admin.module.add');
+        Route::get('module/getData', [ModuleController::class, 'getData'])->name('admin.module.getData');
+        Route::post('module/save', [ModuleController::class, 'save'])->name('admin.module.save');
+        Route::get('module/edit/{id}', [ModuleController::class, 'edit'])->name('admin.module.edit');
+        Route::put('module/update', [ModuleController::class, 'update'])->name('admin.module.update');
+        Route::delete('module/delete', [ModuleController::class, 'delete'])->name('admin.module.delete');
+        Route::get('module/getDetail-{id}', [ModuleController::class, 'getDetail'])->name('admin.module.getDetail');
     });
 });

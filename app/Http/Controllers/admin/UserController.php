@@ -122,9 +122,15 @@ class UserController extends Controller
 
         $profile = Profile::create([
             'user_kode' => $data['kode'],
+            'sosial_media' => '{
+                "linkedin": "",
+                "twitter": "",
+                "instagram": "",
+                "facebook": ""
+              }',
         ]);
     
-        createLog(static::$module, __FUNCTION__, $data->id, $data);
+        createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
         return redirect()->route('admin.users')->with('success', 'Data berhasil disimpan.');
     }
     
@@ -181,7 +187,10 @@ class UserController extends Controller
         }
 
         // Check if a profile exists for the user
-        $profile = Profile::where('user_kode', $data->kode)->firstOrNew([]);
+        $profile = Profile::where('user_kode', $data->kode)->firstOrNew([
+            'user_kode' => $data->kode,
+            'sosial_media' => '{"linkedin":"","twitter":"","instagram":"","facebook":""}',
+        ]);
 
         // Update the profile data
         $profile->user_kode = $updates['kode'];
@@ -192,7 +201,7 @@ class UserController extends Controller
 
         $data->update($updates);
 
-        createLog(static::$module, __FUNCTION__, $data->id, ['Data sebelum diupdate' => $previousData, 'Data yang diupdate' => $updatedData]);
+        createLog(static::$module, __FUNCTION__, $data->id, ['Data sebelum diupdate' => $previousData, 'Data sesudah diupdate' => $updatedData]);
         return redirect()->route('admin.users')->with('success', 'Data berhasil diupdate.');
     }
 
@@ -234,7 +243,7 @@ class UserController extends Controller
         }
 
         // Write logs only for soft delete (not force delete)
-        createLog(static::$module, __FUNCTION__, $id, ['User' => $deletedData, 'User Profile' => $profile]);
+        createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => ['User' => $deletedData, 'User Profile' => $profile]]);
 
         return response()->json([
             'status' => 'success',
@@ -267,6 +276,7 @@ class UserController extends Controller
         }
         
         $data['status'] = $request->status == "Aktif" ? 1 : 0;
+        $log = $request->status;
         $id = $request->ix;
         $updates = User::where(["id" => $id])->first();
         // Simpan data sebelum diupdate
@@ -274,7 +284,7 @@ class UserController extends Controller
         $updates->update($data);
 
         //Write log
-        createLog(static::$module, __FUNCTION__, $id, ['Data yang belum diubah' => $previousData,'Data yang diubah' => $data]);
+        createLog(static::$module, __FUNCTION__, $id, ['Data User' => $previousData,'Statusnya diubah menjadi' => $log]);
         return response()->json([
             'status' => 'success',
             'message' => 'Status telah diubah.',

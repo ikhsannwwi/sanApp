@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers\admin;
 
+use PDF;
 use DataTables;
+use Carbon\Carbon;
 use App\Models\admin\Log;
 use App\Models\admin\User;
 use App\Models\admin\Module;
 use Illuminate\Http\Request;
+use App\Models\admin\Setting;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Response;
 
 class LogSystemController extends Controller
 {
@@ -74,17 +79,44 @@ class LogSystemController extends Controller
 
     public function clearLogs()
     {
-        //Check permission
+        // Check permission
         if (!isAllowed(static::$module, "clear")) {
             abort(403);
         }
-        try {
-            // Hapus semua data log
-            Log::truncate();
 
-            return redirect()->route('admin.logSystems')->with('success', 'Semua data log berhasil dihapus.');
+        try {
+            // Hitung tanggal tujuh hari yang lalu
+            $DaysAgo = Carbon::now()->subDays(7);
+
+            // Hapus data log yang lebih lama dari 7 hari kebelakang
+            Log::where('created_at', '<', $DaysAgo)->delete();
+
+            return redirect()->route('admin.logSystems')->with('success', 'Data log yang lebih lama dari 7 hari berhasil dihapus.');
         } catch (\Exception $e) {
             return redirect()->route('admin.logSystems')->with('error', 'Terjadi kesalahan saat menghapus data log: ' . $e->getMessage());
+        }
+    }
+
+    public function generatePDF()
+    {
+        ini_set('max_execution_time', 600); // Set the maximum execution time to 600 seconds (5 minutes)
+
+        $data = Log::with('user')->orderBy('created_at', 'desc')->get();
+
+        $settings = Setting::get()->toArray();
+        $settings = array_column($settings, 'value', 'name');
+
+        // Render the view using Laravel's View class
+        $html = View::make('administrator.logs.export', compact('data'))->render();
+
+        // Configure PDF settings (optional)
+        $pdf = PDF::loadHTML($html);
+
+        // Output the PDF (open in browser)
+        try {
+            return $pdf->stream('log-export.pdf');
+        } catch (\Exception $e) {
+            return $e->getMessage(); // Output any error message to help diagnose the problem
         }
     }
 }
